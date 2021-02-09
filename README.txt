@@ -6,7 +6,7 @@
 ### Notes
 - Done in c++
 - tests are in the /tests directory
-- 
+- choosing "\n" as the WS separator for internal use
 
 ### To Do:
 [ ] Makefile where P0 is the command to invoke it

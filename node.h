@@ -1,20 +1,16 @@
 #ifndef NODE_H
 #define NODE_H
 
+#include <stdio.h>
 #include <string>
 
-class nodeType {
-  public:
-    // string data;
-    nodeType* left;
-    nodeType* right;
-    
-    nodeType(){};
+using namespace std;
 
-  private:
-    void find();
-    void insert();
-    void remove();
+struct Node {
+  string words;
+  int count;
+  Node *left;
+  Node *right;
 };
 
 #endif

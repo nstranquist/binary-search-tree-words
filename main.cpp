@@ -1,8 +1,10 @@
 #include "node.h"
 #include "tree.h"
 #include <iostream>
+#include <fstream>
 #include <iomanip>
 #include <string.h>
+#include <string>
 
 using namespace std;
 
@@ -16,34 +18,120 @@ int main(int argc, char* argv[]) {
   // - if no arguments after "P0", then read from keyboard in a loop until user enters "EOF"
   // - if next argument is "<", then check for valid filename to follow and read from it
   // - else, assume next argument is the filename, and attempt to read from it
+  fstream file;
+  ofstream outFile;
+
+  // If keyboard input, always write it to a temporary file.
+  string inputFileName = "temp-input.txt";
+  string tempOutputFileName = "temp-output.txt";
+
+  string outputBaseFileName = "output";
 
   int i;
+  bool fileGiven = false;
   for(i = 0; i < argc; i++) {
     printf("Argument %d is %s\n", i, argv[i]);
     if(i == 1) {
       if(strcmp(argv[i], "P0") != 0) {
-        cout << "Invalid Command. 'P0' not detected" << endl;
+        cout << "Invalid Command. 'P0' not detected. Exiting..." << endl;
         return 0;
       }
     }
+    if(i == 2) {
+      fileGiven = true;
+      // check for type
+      inputFileName = argv[i];
+      cout << "user wants us to test their file" << endl;
+      cout << inputFileName << endl;
+    }
   }
+
   // if filename given, make sure file is readable, error otherwise
+  if(fileGiven) {
+    cout << "will now validate and read the user's file" << endl;
 
-  // set up keyboard processing so that below this point there is only one version of the code
+    // Make sure to validate program
+    bool valid = true;
+    if (!valid) {
+      cout << "File was not valid. Exiting..." << endl;
+      return 0;
+    }
+    
+    outputBaseFileName = "inputFileName";
 
+    file.open(inputFileName, ios::in);
+    if(!file) {
+      cout << "File not created" << endl;
+      cout << "Error! Exiting program..." << endl;
+      return 0;
+    }
+    else {
+      cout << "File created successfully" << endl;
+      file.close();
+    }
+  }
+  else {
+    cout << "will begin user keyboard input loop (and write to temp file)" << endl;
 
+    // Read from the file (string inputFileName)
+    outFile.open(inputFileName);
+    if(!outFile) {
+      cout << "File not created" << endl;
+      cout << "Error! Exiting program..." << endl;
+      return 0;
+    }
+    else {
+      cout << "File created successfully" << endl;
+    }
 
+    cout << "Please enter the text that you want processed (Enter \"EOF\" or enter to stop):" << endl;
+    bool continueInput = true;
+    while(continueInput) {
+      // get input
+      string newInput;
+      cin >> newInput;
+      if(newInput == "EOF") {
+        continueInput = false;
+      }
+      else {
+        cout << "New input: " << newInput << endl;
+        // write the input to file
+        outFile << newInput;
+        outFile << " ";
+      }
+    }
+    outFile.close();
+  }
+
+  // Read from the file (string inputFileName)
+  file.open(inputFileName, ios::in);
+  if(file.is_open()) {
+    string tp;
+    while(getline(file, tp)) {
+      cout << tp;
+      cout << "\n"; // \n is the chosen separator
+    }
+    file.close();
+  }
+  else {
+    cout << "File could not be opened. Exiting..." << endl;
+    return 0;
+  }
   
-  string file = "example.txt";
-
-  nodeType node_t = nodeType();
-
+  // Build Tree and Conduct Traversals
   cout << "would proceed to build tree and print traversals to output filse" << endl;
 
-  // node_t *root = buildTree(file);
+  /*Node *root = */BinarySearchTree::buildTree(inputFileName);
+
   // printPreorder(root);
   // printInorder(root);
   // printPostorder(root);
+
+  cout << "End of program." << endl;
+
+  if(file.is_open()) {
+    file.close();
+  }
 
   return 0;
 }

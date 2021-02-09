@@ -2,18 +2,33 @@
 #define TREE_H
 
 #include "node.h"
-
-using namespace std;
-
 #include <string>
 
-class Tree {
+class BinarySearchTree {
+  private:
+    // void incrementNode(Node *&nodePtr) {
+    //   nodePtr->count += 1;
+    // }
+
   public:
-    Tree();
-    static nodeType buildTree(string file);
-    static void printPreorder(nodeType *rootP, int level);
-    static void printInorder(nodeType *rootP, int level);
-    static void printPostorder(nodeType *rootP, int level);
+    BinarySearchTree() {
+      root = nullptr;
+    };
+
+    Node *root;
+
+    Node * getRoot() {
+      return root;
+    }
+
+    static Node * buildTree(string file);
+    static void printPreorder(Node *rootP, int level);
+    static void printInorder(Node *rootP, int level);
+    static void printPostorder(Node *rootP, int level);
+
+    // void addNode(string newString);
+    // void insertNode(Node *root, Node newNode);
+    // void searchNode(string newString);
 };
 
 #endif
