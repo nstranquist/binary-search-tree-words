@@ -1,5 +1,8 @@
+// Main file for the program
+
 #include "node.h"
 #include "tree.h"
+
 #include <iostream>
 #include <fstream>
 #include <iomanip>
@@ -121,11 +124,13 @@ int main(int argc, char* argv[]) {
   // Build Tree and Conduct Traversals
   cout << "would proceed to build tree and print traversals to output filse" << endl;
 
-  /*Node *root = */BinarySearchTree::buildTree(inputFileName);
+  BinarySearchTree searchTree;
 
-  // printPreorder(root);
-  // printInorder(root);
-  // printPostorder(root);
+  Node *root = searchTree.buildTree(inputFileName);
+
+  // searchTree.printPreorder(root);
+  // searchTree.printInorder(root);
+  // searchTree.printPostorder(root);
 
   cout << "End of program." << endl;
 

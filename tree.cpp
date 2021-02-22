@@ -7,21 +7,23 @@
 #include "tree.h"
 #include "node.h"
 
-#include <stdio.h>
 #include <fstream>
 #include <iostream> // cout, etc.
 #include <string>
-#include <string.h>
 
 using namespace std;
 
-static Node * buildTree(string fileName) {
+BinarySearchTree::BinarySearchTree() {
+  root = nullptr;
+}
+
+Node* BinarySearchTree::buildTree(string fileName) {
   // read file contents
   fstream fileToRead;
   string totalWords;
   string separator = "\n";
   
-  BinarySearchTree searchTree = BinarySearchTree();
+  BinarySearchTree searchTree;
 
   fileToRead.open(fileName, ios::in);
   string word;
@@ -51,13 +53,13 @@ static Node * buildTree(string fileName) {
   cout << "Total words: " << totalWords << endl;
 
   // returns a tree?
-  Node *rootNode = searchTree.getRoot();
+  // Node *rootNode = searchTree.getRoot();
 
-  return rootNode;
+  return searchTree.root;
 }
 
 // process root, process children left to right
-static void printPreorder(Node *rootP, int level) {
+void BinarySearchTree::printPreorder(Node *rootP, int level) {
   if (rootP==NULL) return;
   // printf("%*c%d:%-9s ",level*2,' ',level/*, NodeId.info*/); // assume some info printed as string
   printf("\n");
@@ -67,7 +69,7 @@ static void printPreorder(Node *rootP, int level) {
 }
 
 // process left child, process root, process right child
-static void printInorder(Node *rootP, int level) {
+void BinarySearchTree::printInorder(Node *rootP, int level) {
   if (rootP==NULL) return;
   // printf("%*c%d:%-9s ",level*2,' ',level/*, NodeId.info*/); // assume some info printed as string
   printf("\n");
@@ -77,13 +79,25 @@ static void printInorder(Node *rootP, int level) {
 }
 
 // process children left to right, process root
-static void printPostorder(Node *rootP, int level) {
-  if (rootP==NULL) return;
+void BinarySearchTree::printPostorder(Node *root, int level) {
+  if (root==NULL) return;
   // printf("%*c%d:%-9s ",level*2,' ',level/*, NodeId.info*/); // assume some info printed as string
   printf("\n");
-  printPostorder(rootP->left,level+1);
-  printPostorder(rootP->right,level+1);
-  // cout << rootP->data << " ";
+  printPostorder(root->left,level+1);
+  printPostorder(root->right,level+1);
+  // cout << root->data << " ";
+}
+
+void BinarySearchTree::addNode(string newString) {
+  cout << "Adding node" << endl;
+}
+
+void BinarySearchTree::insertNode(Node *root, string word) {
+  cout << "Inserting node" << endl;
+}
+
+void BinarySearchTree::searchNode(string word) {
+  cout << "Searching node" << endl;
 }
 
 // void addNode(string newString) {
