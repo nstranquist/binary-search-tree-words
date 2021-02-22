@@ -106,13 +106,23 @@ int main(int argc, char* argv[]) {
   }
   
   // Build Tree and Conduct Traversals
-  cout << "would proceed to build tree and print traversals to output filse" << endl;
+  cout << "Building BST" << "\n\n";
 
   BinarySearchTree searchTree;
 
-  Node *root = searchTree.buildTree(inputFileName);
+  searchTree.buildTree(inputFileName);
 
-  // searchTree.printPreorder(root);
+  cout << "\n\n";
+
+  if(searchTree.root == NULL) {
+    cout << "root ptr is still null" << endl;
+  }
+  else {
+    cout << "search tree root key: " << searchTree.root->key << endl;
+  }
+
+  cout << "\n\n----------------Printing tree Preorder:--------------\n\n" << endl;
+  searchTree.printPreorder(searchTree.root);
   // searchTree.printInorder(root);
   // searchTree.printPostorder(root);
 

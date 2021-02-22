@@ -14,17 +14,16 @@ class BinarySearchTree {
 
     Node *buildTree(string file);
 
-    void printPreorder(Node *rootP, int level);
+    void printPreorder(Node *rootPtr);
     void printInorder(Node *rootP, int level);
     void printPostorder(Node *rootP, int level);
 
   private:
     Node *createNode(string key, string word);
     Node *searchNode(string word); // should return string maybe?
-    void addNode(string word);
-    void insertNode(string word);
+    void insertNode(string key, string word);
 
-    void addWordToNode(Node temp, string word);
+    void addWordToNode(Node *temp, string word);
     string getCharKey(string word);
 };
 
