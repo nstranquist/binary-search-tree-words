@@ -121,10 +121,14 @@ int main(int argc, char* argv[]) {
     cout << "search tree root key: " << searchTree.root->key << endl;
   }
 
-  cout << "\n\n----------------Printing tree Preorder:--------------\n\n" << endl;
+  cout << "\n\n----------------Printing tree Preorder--------------\n\n" << endl;
   searchTree.printPreorder(searchTree.root);
-  // searchTree.printInorder(root);
-  // searchTree.printPostorder(root);
+
+  cout << "\n\n----------------Printing tree Inorder--------------\n\n" << endl;
+  searchTree.printInorder(searchTree.root, 0);
+
+  cout << "\n\n----------------Printing tree Postorder--------------\n\n" << endl;
+  searchTree.printPostorder(searchTree.root, 0);
 
   cout << "End of program." << endl;
 

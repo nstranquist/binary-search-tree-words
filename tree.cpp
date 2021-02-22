@@ -99,21 +99,21 @@ void BinarySearchTree::printPreorder(Node *rootPtr) {
 // left -> root -> right
 void BinarySearchTree::printInorder(Node *rootPtr, int level) {
   if (rootPtr==NULL) return;
+
   // printf("%*c%d:%-9s ",level*2,' ',level/*, NodeId.info*/); // assume some info printed as string
-  printf("\n");
   printInorder(rootPtr->left,level+1);
-  // cout << rootPtr->data << " ";
+  cout << "key: " << rootPtr->key << "\nwords: " << rootPtr->words << "\n\n";
   printInorder(rootPtr->right,level+1);
 }
 
 // left -> right -> root
 void BinarySearchTree::printPostorder(Node *rootPtr, int level) {
   if (rootPtr==NULL) return;
+  
   // printf("%*c%d:%-9s ",level*2,' ',level/*, NodeId.info*/); // assume some info printed as string
-  printf("\n");
   printPostorder(rootPtr->left,level+1);
   printPostorder(rootPtr->right,level+1);
-  // cout << root->data << " ";
+  cout << "key: " << rootPtr->key << "\nwords: " << rootPtr->words << "\n\n";
 }
 
 void BinarySearchTree::addWordToNode(Node *temp, string word) {
