@@ -10,11 +10,23 @@
 #include <fstream>
 #include <iostream> // cout, etc.
 #include <string>
+#include <queue>
 
 using namespace std;
 
 BinarySearchTree::BinarySearchTree() {
   root = nullptr;
+}
+
+Node* BinarySearchTree::createNode(string key, string word) {
+  Node *node;
+
+  node->key = key;
+  node->words = word;
+  node->left = nullptr;
+  node->right = nullptr;
+
+  return node;
 }
 
 Node* BinarySearchTree::buildTree(string fileName) {
@@ -23,39 +35,41 @@ Node* BinarySearchTree::buildTree(string fileName) {
   string totalWords;
   string separator = "\n";
   
-  BinarySearchTree searchTree;
-
   fileToRead.open(fileName, ios::in);
+
+  if(!fileToRead.is_open()) {
+    cout << "File could not be opened. Exiting..." << endl;
+    return NULL;
+  }
+
   string word;
   while(getline(fileToRead, word)) {
-    // search tree, add or append
-    
-    cout << word;
-    totalWords = word + "\n";
+    // Read each word from file
+    cout << "word: " << word << "\n";
+
     // add word as separate entity to input
-    int strSize = word.size();
-    cout << "string size: " << to_string(strSize) << endl;
-    string firstChars;
-    if(strSize == 1) {
-      cout << "string size is 1" << endl;
-      firstChars = to_string(word[0]);
+    string key = this->getCharKey(word);
+
+    cout << "key: " << key << endl;
+
+    // search through current tree
+    // - if match is found, add word to the node
+    // - if match is not found, insert the node into the tree
+
+    Node *foundNode = this->searchNode(key);
+    
+    if(foundNode == NULL) {
+      cout << "Node was not found. Adding to tree" << endl;
+      this->insertNode(word);
     }
     else {
-      firstChars = to_string(word[0]) + to_string(word[1]);
+      cout << "Node with key was found. Inserting word into node" << endl;
+      this->addWordToNode(*foundNode, word);
     }
-    cout << "first chars: " << firstChars << endl;
-
-    // search through current tree until match is found
-    // if(firstChars == )
   }
   fileToRead.close();
 
-  cout << "Total words: " << totalWords << endl;
-
-  // returns a tree?
-  // Node *rootNode = searchTree.getRoot();
-
-  return searchTree.root;
+  return this->root;
 }
 
 // process root, process children left to right
@@ -88,16 +102,63 @@ void BinarySearchTree::printPostorder(Node *root, int level) {
   // cout << root->data << " ";
 }
 
-void BinarySearchTree::addNode(string newString) {
-  cout << "Adding node" << endl;
+void BinarySearchTree::addWordToNode(Node temp, string word) {
+  cout << "Adding word to node: " << word << endl;
+
+
 }
 
-void BinarySearchTree::insertNode(Node *root, string word) {
-  cout << "Inserting node" << endl;
-}
-
-void BinarySearchTree::searchNode(string word) {
+Node* BinarySearchTree::searchNode(string searchKey) {
   cout << "Searching node" << endl;
+
+  if(this->root == NULL)
+    return this->root;
+
+  cout << "Character key (in searchNode): " << searchKey << endl;
+
+  if(root->key == searchKey)
+    return root;
+
+  queue<Node*> q;
+  Node *out = nullptr;
+
+  q.push(this->root);
+
+  while(!q.empty()) {
+    Node *temp = q.front();
+    q.pop();
+
+    if(temp->key == searchKey)
+      out = temp;
+    if(temp->left != NULL)
+      q.push(temp->left);
+    if(temp->right != NULL)
+      q.push(temp->right);
+  }
+  
+  return out;
+}
+
+void BinarySearchTree::insertNode(string word) {
+  cout << "Inserting node" << endl;
+
+  string searchKey = this->getCharKey(word);
+
+  cout << "Character key: " << searchKey << endl;
+}
+
+// returns the 1 or 2 letter strings from word
+string BinarySearchTree::getCharKey(string word) {
+  // get length of word
+  int length = word.length();
+
+  if(length > 2) {
+    string charKey = word.substr(0, 2);
+    cout << "character key: " << charKey << endl;
+    return charKey;
+  }
+  else
+    return word;
 }
 
 // void addNode(string newString) {

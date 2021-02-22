@@ -13,8 +13,4 @@ struct Node {
   Node *right;
 };
 
-Node *createNode(string key);
-int getCount();
-void insertWord(string word);
-
 #endif

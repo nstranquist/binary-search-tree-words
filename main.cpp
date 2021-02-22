@@ -97,28 +97,12 @@ int main(int argc, char* argv[]) {
         continueInput = false;
       }
       else {
-        cout << "New input: " << newInput << endl;
         // write the input to file
         outFile << newInput;
-        outFile << " ";
+        outFile << "\n";
       }
     }
     outFile.close();
-  }
-
-  // Read from the file (string inputFileName)
-  file.open(inputFileName, ios::in);
-  if(file.is_open()) {
-    string tp;
-    while(getline(file, tp)) {
-      cout << tp;
-      cout << "\n"; // \n is the chosen separator
-    }
-    file.close();
-  }
-  else {
-    cout << "File could not be opened. Exiting..." << endl;
-    return 0;
   }
   
   // Build Tree and Conduct Traversals
