@@ -1,11 +1,4 @@
-// This will include code for:
-// 1. buildTree()
-// 2. printInorder()
-// 3. printPreorder()
-// 4. printPostorder()
-
 #include "tree.h"
-#include "node.h"
 
 #include <fstream>
 #include <iostream>
@@ -29,80 +22,54 @@ Node* BinarySearchTree::createNode(string key, string word) {
   return node;
 }
 
-Node* BinarySearchTree::buildTree(string fileName) {
-  // read file contents
-  fstream fileToRead;
-  string totalWords;
-  string separator = "\n";
-  
-  fileToRead.open(fileName, ios::in);
+Node* BinarySearchTree::buildTree(istream *input) {
+  string delimiterComma = ",";
+  string delimiterSpace = " ";
+  string delimiterTab = "\t";
+  string line;
 
-  if(!fileToRead.is_open()) {
-    cout << "File could not be opened. Exiting..." << endl;
-    return NULL;
-  }
+  while (getline(*input, line)) {
+    if(line == "EOF" || line == "") {
+      cout << "end of file" << endl;
+      break;
+    }
 
-  // Initialize root node with the first word
-  string word;
-  string first_key;
-
-  getline(fileToRead, word);
-
-  cout << "First word: " << word << endl;
-
-  first_key = this->getCharKey(word);
-
-  this->insertNode(first_key, word);
-
-  while(getline(fileToRead, word)) {
-    // Read each word from file
-    cout << "\n" << "word: " << word << "\n";
-
-    // add word as separate entity to input
-    string key = this->getCharKey(word);
-
-    cout << "key: " << key << "\n\n";
-
-    // search through current tree
-    // - if match is found, add word to the node
-    // - if match is not found, insert the node into the tree
-
-    Node *foundNode = this->searchNode(key);
-    
-    if(foundNode == NULL) {
-      cout << "Node was not found. Adding to tree" << endl;
-      this->insertNode(key, word);
+    // Split line into characters, check for delimiters, build tree this way
+    if((line.find(delimiterSpace)) != string::npos) {
+      splitByDelimiter(delimiterSpace, line);
+    }
+    else if((line.find(delimiterComma)) != string::npos) {
+      splitByDelimiter(delimiterComma, line);
+    }
+    else if((line.find(delimiterTab)) != string::npos) {
+      splitByDelimiter(delimiterTab, line);
     }
     else {
-      cout << "Node with key was found. Inserting word into node" << endl;
-      this->addWordToNode(foundNode, word);
+      // treat line as one word, add right to tree
+      string key = this->getCharKey(line);
+
+      this->handleNewNode(key, line);
     }
   }
-
-  fileToRead.close();
 
   return this->root;
 }
 
 // root -> left -> right
-void BinarySearchTree::printPreorder(Node *rootPtr) {
-  if (rootPtr==NULL)
-    return;
+void BinarySearchTree::printPreorder(Node *rootPtr, int level) {
+  if (rootPtr==NULL) return;
 
-  // printf("%*c%d:%-9s ",level*2,' ',level/*, NodeId.info*/); // assume some info printed as string
-  cout << "key: " << rootPtr->key << "\nwords: " << rootPtr->words << "\n\n";
-  // cout << rootPtr->data << " ";
-  printPreorder(rootPtr->left);
-  printPreorder(rootPtr->right);
+  cout << std::string((level*2), '-') << rootPtr->key << ": " << rootPtr->words << endl;
+  printPreorder(rootPtr->left, level+1);
+  printPreorder(rootPtr->right, level+1);
 }
 
 // left -> root -> right
 void BinarySearchTree::printInorder(Node *rootPtr, int level) {
   if (rootPtr==NULL) return;
 
-  // printf("%*c%d:%-9s ",level*2,' ',level/*, NodeId.info*/); // assume some info printed as string
   printInorder(rootPtr->left,level+1);
-  cout << "key: " << rootPtr->key << "\nwords: " << rootPtr->words << "\n\n";
+  cout << '|' << std::string((level*2), '-') << rootPtr->key << ": " << rootPtr->words << endl;
   printInorder(rootPtr->right,level+1);
 }
 
@@ -110,20 +77,13 @@ void BinarySearchTree::printInorder(Node *rootPtr, int level) {
 void BinarySearchTree::printPostorder(Node *rootPtr, int level) {
   if (rootPtr==NULL) return;
 
-  // printf("%*c%d:%-9s ",level*2,' ',level/*, NodeId.info*/); // assume some info printed as string
   printPostorder(rootPtr->left,level+1);
   printPostorder(rootPtr->right,level+1);
-  cout << "key: " << rootPtr->key << "\nwords: " << rootPtr->words << "\n\n";
+  cout << '|' << std::string((level*2), '-') << rootPtr->key << ": " << rootPtr->words << endl;
 }
 
 void BinarySearchTree::addWordToNode(Node *temp, string word) {
-  cout << "Adding word to node: " << word << endl;
-
-  cout << "Existing words: " << temp->words << endl;
-
   temp->words = temp->words + " " + word;
-
-  cout << "Words after edit: " << temp->words << endl;
 }
 
 Node* BinarySearchTree::searchNode(string searchKey) {
@@ -151,11 +111,8 @@ Node* BinarySearchTree::searchNode(string searchKey) {
 }
 
 void BinarySearchTree::insertNode(string key, string word) {
-  cout << "Inserting node" << endl;
-
   // if root is null, need to initialize it
   if(this->root == NULL) {
-    cout << "Root is null. Initializing..." << endl;
     this->root = this->createNode(key, word);
     return;
   }
@@ -200,4 +157,38 @@ string BinarySearchTree::getCharKey(string word) {
   }
   else
     return word;
+}
+
+void BinarySearchTree::splitByDelimiter (string delimiter, string line) {
+  size_t last = 0;
+  size_t next = 0;
+
+  string word;
+  string key;
+  while((next = line.find(delimiter, last)) != string::npos) {
+    word = line.substr(last, (next-last));
+    key = this->getCharKey(word);
+
+    this->handleNewNode(key, word);
+
+    last = next + 1;
+  }
+
+  if(last > 0) {
+    string lastWord = line.substr(last);
+    key = this->getCharKey(lastWord);
+
+    this->handleNewNode(key, lastWord);
+  }
+}
+
+void BinarySearchTree::handleNewNode (string key, string line) {
+  Node *foundNode = this->searchNode(key);
+    
+  if(foundNode == NULL) {
+    this->insertNode(key, line);
+  }
+  else {
+    this->addWordToNode(foundNode, line);
+  }
 }
