@@ -28,8 +28,24 @@ int main(int argc, char *argv[])
 
     cout << "Reading your file..." << endl;
     if(!out.is_open()) {
-      cout << "Error: Your file could not be read. It probably does not exist." << endl;
-      return 1;
+      // Before error, check if sp2020 is being added or not
+      if(fileName.find(".sp2020") == std::string::npos) {
+        // try one more time to open the file
+        out.open(fileName + ".sp2020");
+        in = &out;
+
+        if(!out.is_open()) {
+          cout << "Error: Your file could not be read. It probably does not exist." << endl;
+          return 1;
+        }
+        else {
+          cout << "proceeding with file" << endl;
+        }
+      }
+      else {
+        cout << "Error: Your file could not be read. It probably does not exist." << endl;
+        return 1;
+      }
     }
     else if (out.peek() == ifstream::traits_type::eof()) {
       cout << "Error: Your file is empty, so it could not be used." << endl;
@@ -115,7 +131,7 @@ int main(int argc, char *argv[])
     outputFile.close();
   }
 
-  cout << "\n\nEnd of program." << endl;
+  printf("End of program.\n");
 
   return 0;
 }

@@ -190,12 +190,8 @@ void BinarySearchTree::handleNewNode (string key, string line) {
   }
   else {
     // Check if the node already contains the word
-    cout << "adding new word: " << line << " to words: " << foundNode->words << endl;
     bool isDupliate = this->checkDuplicateWord(foundNode, line);
-    if(isDupliate) {
-      cout << line << " is a duplicate. Skipping..." << endl;
-      return;
-    }
+    if(isDupliate) return;
     this->addWordToNode(foundNode, line);
   }
 }
