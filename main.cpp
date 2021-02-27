@@ -12,11 +12,6 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-  // process command line arguments first and error if improper
-  // - first argument should be "P0"
-  // - if no arguments after "P0", then read from keyboard in a loop until user enters "EOF"
-  // - if next argument is "<", then check for valid filename to follow and read from it
-  // - else, assume next argument is the filename, and attempt to read from it
   string outputBaseFileName = "output";
 
   istream *in;
@@ -30,16 +25,35 @@ int main(int argc, char *argv[])
   else if (argc == 2)
   {
     string fileName = argv[1];
-    cout << "file: " << fileName << endl;
     out.open(fileName);
     in = &out;
+
     cout << "Reading your file..." << endl;
     if(!out.is_open()) {
-      cout << "Your file could not be read. It is either empty or does not exist." << endl;
+      cout << "Error: Your file could not be read. It probably does not exist." << endl;
       return 1;
     }
-    // need to get base filename from file
+    else if (out.peek() == ifstream::traits_type::eof()) {
+      cout << "Error: Your file is empty, so it could not be used." << endl;
+      return 1;
+    }
 
+    // filter the orignal filename for slashes
+    size_t positionSlash;
+    while((positionSlash = fileName.find('/')) != string::npos) {
+      string tempSubstr = fileName.substr(positionSlash+1); // get the rest of the string after the current slash found
+      fileName = tempSubstr;
+    }
+
+    // get filename after slashes removed
+    size_t position = fileName.find('.');
+    if(position != string::npos) {
+      string newBaseFileName = fileName.substr(0, position);
+      cout << "new base filename: " << newBaseFileName << endl;
+      outputBaseFileName = newBaseFileName;
+    }
+    else
+      outputBaseFileName = fileName;
   }
   else {
     cout << "Error: Too many arguments given. Please retry with 1 or 2 arguments (including the command)." << endl;
@@ -51,25 +65,58 @@ int main(int argc, char *argv[])
 
   Node *rootPtr = searchTree.buildTree(in);
 
-  cout << "\n\n";
+  cout << "\n";
   
   // TODO: Null-check the tree
   if (rootPtr == NULL)
   {
-    cout << "Error: BST is still null, input was not added successfully." << endl;
+    cout << "Error: Input was not added successfully, you probably provided an empty set of inputs" << endl;
     return 1;
   }
 
-  // Print Traversals
-  cout << "\n\n----------------Printing tree Preorder--------------\n\n" << endl;
-  searchTree.printPreorder(rootPtr, 0);
+  cout << "\n";
 
-  cout << "\n\n----------------Printing tree Inorder--------------\n\n" << endl;
-  searchTree.printInorder(rootPtr, 0);
+  // Print Traversals (output to file)
+  ofstream outputFile;
 
-  cout << "\n\n----------------Printing tree Postorder--------------\n\n" << endl;
-  searchTree.printPostorder(rootPtr, 0);
+  outputFile.open((outputBaseFileName + ".preorder"), ios::trunc);
 
+  if(!outputFile.is_open()) {
+    cout << "Error: Could not open a file to print your preorder traversal to.\n" << endl;
+  }
+  else {
+    cout.rdbuf(outputFile.rdbuf());
+
+    searchTree.printPreorder(rootPtr, 0);
+
+    outputFile.close();
+  }
+
+  outputFile.open((outputBaseFileName + ".inorder"), ios::trunc);
+
+  if(!outputFile.is_open()) {
+    cout << "Error: Could not open a file to print your inorder traversal to.\n" << endl;
+  }
+  else {
+    cout.rdbuf(outputFile.rdbuf());
+
+    searchTree.printInorder(rootPtr, 0);
+
+    outputFile.close();
+  }
+
+  outputFile.open((outputBaseFileName + ".postorder"), ios::trunc);
+
+  if(!outputFile.is_open()) {
+    cout << "Error: Could not open a file to print your postorder traversal to.\n" << endl;
+  }
+  else {
+    cout.rdbuf(outputFile.rdbuf());
+
+    searchTree.printPostorder(rootPtr, 0);
+
+    outputFile.close();
+  }
 
   cout << "\n\nEnd of program." << endl;
 

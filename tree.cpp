@@ -69,7 +69,7 @@ void BinarySearchTree::printInorder(Node *rootPtr, int level) {
   if (rootPtr==NULL) return;
 
   printInorder(rootPtr->left,level+1);
-  cout << '|' << std::string((level*2), '-') << rootPtr->key << ": " << rootPtr->words << endl;
+  cout << std::string((level*2), '-') << rootPtr->key << ": " << rootPtr->words << endl;
   printInorder(rootPtr->right,level+1);
 }
 
@@ -79,7 +79,7 @@ void BinarySearchTree::printPostorder(Node *rootPtr, int level) {
 
   printPostorder(rootPtr->left,level+1);
   printPostorder(rootPtr->right,level+1);
-  cout << '|' << std::string((level*2), '-') << rootPtr->key << ": " << rootPtr->words << endl;
+  cout << std::string((level*2), '-') << rootPtr->key << ": " << rootPtr->words << endl;
 }
 
 void BinarySearchTree::addWordToNode(Node *temp, string word) {
