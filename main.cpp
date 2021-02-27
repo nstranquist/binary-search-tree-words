@@ -1,5 +1,3 @@
-// Main file for the program
-
 #include "node.h"
 #include "tree.h"
 
@@ -67,7 +65,6 @@ int main(int argc, char *argv[])
 
   cout << "\n";
   
-  // TODO: Null-check the tree
   if (rootPtr == NULL)
   {
     cout << "Error: Input was not added successfully, you probably provided an empty set of inputs" << endl;
@@ -76,7 +73,7 @@ int main(int argc, char *argv[])
 
   cout << "\n";
 
-  // Print Traversals (output to file)
+  // Print Traversals as output to a file
   ofstream outputFile;
 
   outputFile.open((outputBaseFileName + ".preorder"), ios::trunc);

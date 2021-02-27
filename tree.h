@@ -27,6 +27,7 @@ class BinarySearchTree {
     void splitByDelimiter(string delimiter, string line);
     void handleNewNode (string key, string line);
     string getCharKey(string word);
+    bool checkDuplicateWord(Node *foundNode, string line);
 };
 
 #endif

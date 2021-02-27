@@ -175,10 +175,10 @@ void BinarySearchTree::splitByDelimiter (string delimiter, string line) {
   }
 
   if(last > 0) {
-    string lastWord = line.substr(last);
-    key = this->getCharKey(lastWord);
+    word = line.substr(last);
+    key = this->getCharKey(word);
 
-    this->handleNewNode(key, lastWord);
+    this->handleNewNode(key, word);
   }
 }
 
@@ -189,6 +189,40 @@ void BinarySearchTree::handleNewNode (string key, string line) {
     this->insertNode(key, line);
   }
   else {
+    // Check if the node already contains the word
+    cout << "adding new word: " << line << " to words: " << foundNode->words << endl;
+    bool isDupliate = this->checkDuplicateWord(foundNode, line);
+    if(isDupliate) {
+      cout << line << " is a duplicate. Skipping..." << endl;
+      return;
+    }
     this->addWordToNode(foundNode, line);
   }
+}
+
+bool BinarySearchTree::checkDuplicateWord(Node *foundNode, string line) {
+  // iterate through words by space
+  size_t last = 0;
+  size_t next = 0;
+
+  string word;
+  string key;
+  while((next = foundNode->words.find(" ", last)) != string::npos) {
+    word = line.substr(last, (next-last));
+
+    // check if equal
+    if(word == line)
+      return true;
+
+    last = next + 1;
+  }
+
+  if(last > 0) {
+    word = line.substr(last);
+
+    if(word == line)
+      return true;
+  }
+
+  return false;
 }
