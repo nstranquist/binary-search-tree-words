@@ -1,1 +1,2 @@
-hello infile text stuff
+heeeello infile text stuff EOF
+More stuffff

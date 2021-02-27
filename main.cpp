@@ -4,6 +4,7 @@
 #include "tree.h"
 
 #include <iostream>
+#include <istream>
 #include <fstream>
 #include <iomanip>
 #include <string.h>
@@ -15,7 +16,8 @@ using namespace std;
 // 1. If keyboard input, read the input into temporary file, after which the rest of the program always processes file input
 // 2. If keyboard input, set file pointer to stdin otherwise set file pointer to the actual file, then process always from the file pointer
 
-int main(int argc, char* argv[]) {
+int main(int argc, char *argv[])
+{
   // process command line arguments first and error if improper
   // - first argument should be "P0"
   // - if no arguments after "P0", then read from keyboard in a loop until user enters "EOF"
@@ -30,73 +32,116 @@ int main(int argc, char* argv[]) {
 
   string outputBaseFileName = "output";
 
-  int i;
-  bool fileGiven = false;
-  for(i = 0; i < argc; i++) {
-    printf("Argument %d is %s\n", i, argv[i]);
-    if(i == 1) {
-      if(strcmp(argv[i], "P0") != 0) {
-        cout << "Invalid Command. 'P0' not detected. Exiting..." << endl;
-        return 0;
-      }
-    }
-    if(i == 2) {
-      fileGiven = true;
-      // check for type
-      inputFileName = argv[i];
-      cout << "user wants us to test their file" << endl;
-      cout << inputFileName << endl;
+  // // Save original std::cin, std::cout
+  // std::streambuf *coutbuf = std::cout.rdbuf();
+  // std::streambuf *cinbuf = std::cin.rdbuf();
+
+  // std::ofstream out("outfile.txt");
+  // std::ifstream in("infile.txt");
+
+  // //Read from infile.txt using std::cin
+  // std::cin.rdbuf(in.rdbuf());
+
+  // //Write to outfile.txt through std::cout
+  // std::cout.rdbuf(out.rdbuf());
+
+  // std::string test;
+  // cout << "test: " << test << endl;
+  // std::cin >> test;           //from infile.txt
+  // std::cout << test << "  "; //to outfile.txt
+
+  // //Restore back.
+  // std::cin.rdbuf(cinbuf);
+  // std::cout.rdbuf(coutbuf);
+
+  istream *in;
+  ifstream out;
+
+  if (argc == 1)
+    in = &cin;
+  // Argument given, open the file and use it
+  else
+  {
+    out.open(argv[1]);
+    in = &out;
+  }
+
+  // Read from in
+
+  string line;
+  while (getline(*in, line)) {
+    cout << line << endl;
+    if(line == "EOF" || line == "") {
+      cout << "end of file" << endl;
+      break;
     }
   }
 
-  // if filename given, make sure file is readable, error otherwise
-  if(fileGiven) {
+  return 0;
+
+  cout << "arg count: " << argc << endl;
+
+  if (argc == 1)
+  {
+    cout << "either redirecting or reading from keyboard input" << endl;
     cout << "will now validate and read the user's file" << endl;
 
     // Make sure to validate program
     bool valid = true;
-    if (!valid) {
+    if (!valid)
+    {
       cout << "File was not valid. Exiting..." << endl;
       return 0;
     }
-    
+
     outputBaseFileName = "inputFileName";
 
+    // TODO: read from file, don't just delete it
     file.open(inputFileName, ios::in);
-    if(!file) {
+    if (!file)
+    {
       cout << "File not created" << endl;
       cout << "Error! Exiting program..." << endl;
       return 0;
     }
-    else {
+    else
+    {
       cout << "File created successfully" << endl;
       file.close();
     }
   }
-  else {
+  else if (argc == 2)
+  {
+    inputFileName = argv[1];
+    cout << "user wants us to test their file: " << inputFileName << endl;
     cout << "will begin user keyboard input loop (and write to temp file)" << endl;
 
     // Read from the file (string inputFileName)
     outFile.open(inputFileName);
-    if(!outFile) {
+    if (!outFile)
+    {
       cout << "File not created" << endl;
       cout << "Error! Exiting program..." << endl;
       return 0;
     }
-    else {
+    else
+    {
       cout << "File created successfully" << endl;
     }
 
     cout << "Please enter the text that you want processed (Enter \"EOF\" or enter to stop):" << endl;
     bool continueInput = true;
-    while(continueInput) {
+    while (continueInput)
+    {
       // get input
       string newInput;
       cin >> newInput;
-      if(newInput == "EOF") {
+      if (newInput == "EOF")
+      {
         continueInput = false;
       }
-      else {
+      else
+      {
         // write the input to file
         outFile << newInput;
         outFile << "\n";
@@ -104,35 +149,46 @@ int main(int argc, char* argv[]) {
     }
     outFile.close();
   }
-  
+  else
+  {
+    cout << "This program only supports 1 or 2 arguments. You have entered too many arguments. Exiting..." << endl;
+  }
+
   // Build Tree and Conduct Traversals
-  cout << "Building BST" << "\n\n";
+  cout << "Building BST"
+       << "\n\n";
 
   BinarySearchTree searchTree;
 
-  searchTree.buildTree(inputFileName);
+  Node *rootPtr = searchTree.buildTree(inputFileName);
 
   cout << "\n\n";
 
-  if(searchTree.root == NULL) {
+  if (rootPtr == NULL)
+  {
     cout << "root ptr is still null" << endl;
   }
-  else {
-    cout << "search tree root key: " << searchTree.root->key << endl;
+  else
+  {
+    cout << "search tree root key: " << rootPtr->key << endl;
   }
 
-  cout << "\n\n----------------Printing tree Preorder--------------\n\n" << endl;
-  searchTree.printPreorder(searchTree.root);
+  cout << "\n\n----------------Printing tree Preorder--------------\n\n"
+       << endl;
+  searchTree.printPreorder(rootPtr);
 
-  cout << "\n\n----------------Printing tree Inorder--------------\n\n" << endl;
-  searchTree.printInorder(searchTree.root, 0);
+  cout << "\n\n----------------Printing tree Inorder--------------\n\n"
+       << endl;
+  searchTree.printInorder(rootPtr, 0);
 
-  cout << "\n\n----------------Printing tree Postorder--------------\n\n" << endl;
-  searchTree.printPostorder(searchTree.root, 0);
+  cout << "\n\n----------------Printing tree Postorder--------------\n\n"
+       << endl;
+  searchTree.printPostorder(rootPtr, 0);
 
   cout << "End of program." << endl;
 
-  if(file.is_open()) {
+  if (file.is_open())
+  {
     file.close();
   }
 

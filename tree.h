@@ -10,8 +10,6 @@ class BinarySearchTree {
   public:
     BinarySearchTree();
 
-    Node *root;
-
     Node *buildTree(string file);
 
     void printPreorder(Node *rootPtr);
@@ -19,6 +17,8 @@ class BinarySearchTree {
     void printPostorder(Node *rootP, int level);
 
   private:
+    Node *root;
+
     Node *createNode(string key, string word);
     Node *searchNode(string word); // should return string maybe?
     void insertNode(string key, string word);

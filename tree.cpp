@@ -8,7 +8,7 @@
 #include "node.h"
 
 #include <fstream>
-#include <iostream> // cout, etc.
+#include <iostream>
 #include <string>
 #include <queue>
 
@@ -109,7 +109,7 @@ void BinarySearchTree::printInorder(Node *rootPtr, int level) {
 // left -> right -> root
 void BinarySearchTree::printPostorder(Node *rootPtr, int level) {
   if (rootPtr==NULL) return;
-  
+
   // printf("%*c%d:%-9s ",level*2,' ',level/*, NodeId.info*/); // assume some info printed as string
   printPostorder(rootPtr->left,level+1);
   printPostorder(rootPtr->right,level+1);
@@ -201,57 +201,3 @@ string BinarySearchTree::getCharKey(string word) {
   else
     return word;
 }
-
-// void addNode(string newString) {
-//   bool nodeFound;
-  
-//   // check if tree already contains the character. Will automatically increment if it does
-//   nodeFound = searchNode(newString);
-
-//   if(nodeFound == false) {
-//     // If not found, add the node as a new node:
-//     Node *newNode = nullptr;
-
-//     // Create new node, initialize its values, store character value
-//     newNode = new Node;
-//     newNode->character = character;
-//     newNode->count = 1;
-//     newNode->left = newNode->right = nullptr;
-
-//     // Insert node
-//     insertNode(root, newNode);
-//   }
-// }
-
-// void insertNode(Node *root, Node newNode) {
-//   if(nodePtr == nullptr) { // insert node
-//     nodePtr = newNode;
-//   } else if (newNode->character < nodePtr->character) {  // search left branch
-//     insertNode(nodePtr->left, newNode);
-//   } else {   // search right branch
-//     insertNode(nodePtr->right, newNode);
-//   }
-// }
-
-// bool searchNode(string newString) {
-//   // get first two characters of string
-//     // if length of newString < 2, search accordingly (to strLength=1)
-//   Node *nodePtr = root;
-
-//   while(nodePtr) {
-//     if(nodePtr->character == character) {
-//       incrementNode(nodePtr);
-//       return true;
-//     }
-//     else if (character < nodePtr->character)
-//       nodePtr = nodePtr->left;
-//     else
-//       nodePtr = nodePtr->right;
-//   }
-
-//   return false;
-// }
-
-// void incrementNode(Node *nodePtr) {
-
-// }
