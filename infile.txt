@@ -1,2 +1,0 @@
-heeeello infile text stuff EOF
-More stuffff
